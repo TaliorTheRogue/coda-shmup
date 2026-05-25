@@ -32,6 +32,7 @@ export default class Enemy extends Entity {
         const health = this.getComponent(Health);
         if (health) {
             health.setMax(this._enemyData.maxHealth);
+            health?.heal(health!.max, false);
         }
         // Apply Enemy Movement
         const movement = this.getComponent(Movement);
@@ -112,11 +113,7 @@ export default class Enemy extends Entity {
         this.applyEnemyConfig();
 
         this._shootTimer.reset(this._shootTimerConfig);
-        const health = this.getComponent(Health);
-
-
-        // Restore health, in case the enemy is reused from the pool, without emitting events
-        health?.heal(health!.max, false);
+        
         // Reset movement, in case the enemy is reused from the pool, without emitting events
         this.getComponent(Movement)?.reset(this);
     }
@@ -130,24 +127,12 @@ export default class Enemy extends Entity {
     }
 
     private shoot() {
-        switch (this._enemyData.type) {
-            case "base":
-                this.play('ufoShoot');
-                this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-                    this.setTexture('sprites', 'ufoRed');
-                    this.getComponent(Weapon)?.shoot(this);
-                    this.scene.sound.play('sfx_laser2');
-                })          
-                break;
-            case "spread":
-                this.play('ufoSpreadShoot');
-                this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-                    this.setTexture('sprites', 'ufoRedSpread');
-                    this.getComponent(Weapon)?.spreadShoot(this, this._enemyData.shotRate, this._enemyData.shotAngleZone);
-                    this.scene.sound.play('sfx_laser2');
-                })
-                break;
-        }
+        this.play(this._enemyData.shootAnimation);
+        this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+            this.setTexture('sprites', this._enemyData.texture);
+            this.getComponent(Weapon)?.shoot(this, this._enemyData.projectileCount, this._enemyData.shotAngleZone);
+            this.scene.sound.play('sfx_laser2');
+        })          
     }
 
     preUpdate(timeSinceLaunch: number, deltaTime: number) {
@@ -158,14 +143,14 @@ export default class Enemy extends Entity {
             this.disable();
         }
 
-        switch (this._enemyData.type) {
-            case "base":
+        switch (this._enemyData.movementType) {
+            case "vertical":
                 if (!this.isTinted)
                     this.getComponent(Movement)?.moveVertically(this, deltaTime);
                 else
                     this.getComponent(Movement)?.moveVertically(this, deltaTime * 0.5);
                 break;
-            case "spread":
+            case "sinusoidal":
                 if (!this.isTinted)
                     this.getComponent(Movement)?.moveSinusoidally(this, deltaTime, this._enemyData.movementAmplitude, this._enemyData.movementFrequency);
                 else

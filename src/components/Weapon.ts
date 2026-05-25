@@ -19,50 +19,31 @@ export default class Weapon implements IComponent {
         this._bulletData = bulletData;
     }
 
-    public shoot(source: Entity) {
-        if (!this.enabled)
+    public shoot(source: Entity, bulletCount: number = 1, shotArc: number = 0) {
+        if (!this.enabled || !this._bullets)
             return;
-
-        if (!this._bullets)
-            return;
-
-        const bullet: Bullet = this._bullets.get() as Bullet;
-        if (bullet) {
-            // Get forward vector of the source entity
-            const sourceForward: Phaser.Math.Vector2 = new Phaser.Math.Vector2(1, 0).rotate(source.rotation);
-            const bulletVelocity: Phaser.Math.Vector2 = sourceForward.clone().scale(this._bulletData.speed);
-            bullet.enable(source.x + sourceForward.x * source.arcadeBody.radius, source.y + sourceForward.y * source.arcadeBody.radius,
-                bulletVelocity.x, bulletVelocity.y, this._bulletData);
-
-            // Maths way
-            // const forwardVectorX: number = Math.cos(source.rotation);
-            // const forwardVectorY: number = Math.sin(source.rotation);
-            // const bulletVelocityX: number = forwardVectorX * this._bulletData.speed;
-            // const bulletVelocityY: number = forwardVectorY * this._bulletData.speed;
-            // bullet.enable(source.x + forwardVectorX * source.arcadeBody.radius, source.y + forwardVectorY * source.arcadeBody.radius,
-            //     bulletVelocityX, bulletVelocityY, this._bulletData);
-        }
-    }
-
-    public spreadShoot(source: Entity, bulletsQuantity: number, shotArc: number) {
-        if (!this.enabled)
-            return;
-
-        if(!this._bullets)
-            return;
-
-        const shotSpacing: number = shotArc / (bulletsQuantity - 1);
-        let shotAngle: number = source.angle + shotArc/2
-
-        for(let i: number = 0; i < bulletsQuantity; i++) {
-            const sourceForward: Phaser.Math.Vector2 = new Phaser.Math.Vector2(1, 0).rotate(Phaser.Math.DegToRad(shotAngle));
-            const bulletVelocity: Phaser.Math.Vector2 = sourceForward.clone().scale(this._bulletData.speed);
-            const bullet: Bullet = this._bullets.get() as Bullet;
-            bullet.enable(source.x + sourceForward.x * source.arcadeBody.radius, source.y + sourceForward.y * source.arcadeBody.radius,
-                bulletVelocity.x, bulletVelocity.y, this._bulletData);
-
-            shotAngle -= shotSpacing
-        }
         
+        const safeBulletCount = Math.max(1, bulletCount)
+        const shotSpacing: number = safeBulletCount > 1 ? shotArc / (safeBulletCount - 1) : 0;
+        let shotAngle: number = source.angle + shotArc/2;
+
+        for(let i: number = 0; i < bulletCount; i++) {
+            const bullet: Bullet = this._bullets.get() as Bullet;
+            if (bullet) {
+                // Get forward vector of the source entity
+                const sourceForward: Phaser.Math.Vector2 = new Phaser.Math.Vector2(1, 0).rotate(Phaser.Math.DegToRad(shotAngle));
+                const bulletVelocity: Phaser.Math.Vector2 = sourceForward.clone().scale(this._bulletData.speed);
+                
+                bullet.enable(
+                    source.x + sourceForward.x * source.arcadeBody.radius, 
+                    source.y + sourceForward.y * source.arcadeBody.radius,
+                    bulletVelocity.x,
+                    bulletVelocity.y,
+                    this._bulletData
+                );
+
+                shotAngle -= shotSpacing
+            }
+        }
     }
 }
