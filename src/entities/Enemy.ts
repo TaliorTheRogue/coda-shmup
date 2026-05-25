@@ -17,32 +17,30 @@ export default class Enemy extends Entity {
     private _shootTimerConfig: Phaser.Types.Time.TimerEventConfig;
     private _shootTimer: Phaser.Time.TimerEvent;
 
-    public randomEnemyType() {
+    private randomEnemyType() {
         const enemiesData = this.scene.cache.json.get('enemies') as EnemiesData;
         const enemyKeys = Object.keys(enemiesData);
 
         const enemyTypeId = Phaser.Math.RND.pick(enemyKeys); 
         this._enemyData = enemiesData[enemyTypeId];
-    } 
+    }
 
-    public init(bulletsGroup: Phaser.Physics.Arcade.Group) {
-        this.randomEnemyType();
-        this.setTexture('sprites', this._enemyData.texture)
-        this.addComponent(new Health(this._enemyData.health, this));
-        this.addComponent(new Movement(this._enemyData.movementSpeed));
-        this.addComponent(new Weapon(bulletsGroup, this._bulletData));
-        
-        this.angle = 90;
+    private applyEnemyConfig() {
+        // Apply Enemy texture
+        this.setTexture('sprites', this._enemyData.texture);
+        // Apply Enemy Health
+        const health = this.getComponent(Health);
+        if (health) {
+            health.heal(this._enemyData.health);
+        }
+        // Apply Enemy Movement
+        const movement = this.getComponent(Movement);
+        if (movement) {
+            movement.setSpeed(this._enemyData.movementSpeed);
+        }
+    }
 
-        this._shootTimerConfig = {
-            delay: Phaser.Math.Between(2000, 3000),
-            callback: this.shoot,
-            callbackScope: this,
-            loop: true
-        };
-        this._shootTimer = this.scene.time.addEvent(this._shootTimerConfig);
-
-        // Create animation when enemy is about to shoot in the global animation manager
+    private createAnimations() {
         if (!this.scene.anims.exists('ufoShoot')) {
             this.scene.anims.create({
                 key: 'ufoShoot',
@@ -65,13 +63,26 @@ export default class Enemy extends Entity {
                 frameRate: 4,
             });
         }
-
-        this.arcadeBody.setCircle(this.displayWidth / 2);
     }
 
-    public enable(x: number, y: number) {
-        this.enableBody(true, x, y - this.displayHeight, true, true);
-        this._shootTimer.reset(this._shootTimerConfig);
+    public init(bulletsGroup: Phaser.Physics.Arcade.Group) {
+        this.addComponent(new Health(1, this));
+        this.addComponent(new Movement(0));
+        this.addComponent(new Weapon(bulletsGroup, this._bulletData));
+        
+        this.angle = 90;
+
+        this._shootTimerConfig = {
+            delay: Phaser.Math.Between(2000, 3000),
+            callback: this.shoot,
+            callbackScope: this,
+            loop: true
+        };
+        this._shootTimer = this.scene.time.addEvent(this._shootTimerConfig);
+
+        // Create animation when enemy is about to shoot in the global animation manager
+        this.createAnimations();
+
         const health = this.getComponent(Health);
         health?.on(Health.CHANGE_EVENT, () => {
             this.setTintFill(0xffffff);
@@ -90,6 +101,19 @@ export default class Enemy extends Entity {
                 }
             });
         });
+
+        this.arcadeBody.setCircle(this.displayWidth / 2);
+    }
+
+    public enable(x: number, y: number) {
+        this.enableBody(true, x, y - this.displayHeight, true, true);
+
+        this.randomEnemyType();
+        this.applyEnemyConfig();
+
+        this._shootTimer.reset(this._shootTimerConfig);
+        const health = this.getComponent(Health);
+
 
         // Restore health, in case the enemy is reused from the pool, without emitting events
         health?.heal(health!.max, false);
