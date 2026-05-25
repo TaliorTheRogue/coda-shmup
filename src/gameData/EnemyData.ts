@@ -5,10 +5,12 @@ export type EnemiesData = {
 export type EnemyData = {
   type: string,
   texture: string,
-  health: number,
+  shootAnimation: string,
+  maxHealth: number,
+  movementType: string,
   movementSpeed: number,
   movementAmplitude: number,
   movementFrequency: number,
-  shotRate: number,
+  projectileCount: number,
   shotAngleZone: number,
 }
