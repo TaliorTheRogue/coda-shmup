@@ -31,7 +31,7 @@ export default class Enemy extends Entity {
         // Apply Enemy Health
         const health = this.getComponent(Health);
         if (health) {
-            health.heal(this._enemyData.health);
+            health.setMax(this._enemyData.maxHealth);
         }
         // Apply Enemy Movement
         const movement = this.getComponent(Movement);
