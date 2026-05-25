@@ -27,7 +27,7 @@ export default class Weapon implements IComponent {
         const shotSpacing: number = safeBulletCount > 1 ? shotArc / (safeBulletCount - 1) : 0;
         let shotAngle: number = source.angle + shotArc/2;
 
-        for(let i: number = 0; i < bulletCount; i++) {
+        for(let i: number = 0; i < safeBulletCount; i++) {
             const bullet: Bullet = this._bullets.get() as Bullet;
             if (bullet) {
                 // Get forward vector of the source entity
