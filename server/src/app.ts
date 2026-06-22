@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import authRoutes from "./routes/auth.route.js";
 
 dotenv.config();
 
@@ -15,5 +16,7 @@ app.get("/health", (_req, res) => {
     message: "CODA_SHMUP API is running",
   });
 });
+
+app.use("/auth", authRoutes);
 
 export default app;
