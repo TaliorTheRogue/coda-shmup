@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String   @id @default(uuid())
+  username     String   @unique
+  passwordHash String
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  ships        Ship[]
+}
+
+model Ship {
+  id         String   @id @default(uuid())
+
+  customName String
+  spriteName String
+
+  userId     String
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user       User     @relation(fields: [userId], references: [id])
+  scores     Score[]
+}
+
+model Score {
+  id        String   @id @default(uuid())
+
+  value     Int
+
+  shipId    String
+
+  createdAt DateTime @default(now())
+
+  ship      Ship     @relation(fields: [shipId], references: [id])
+}
