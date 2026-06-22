@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.route.js";
+import profileRoutes from "./routes/profile.route.js";
 
 dotenv.config();
 
@@ -18,5 +19,6 @@ app.get("/health", (_req, res) => {
 });
 
 app.use("/auth", authRoutes);
+app.use("/profile", profileRoutes)
 
 export default app;
