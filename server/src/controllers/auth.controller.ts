@@ -1,4 +1,6 @@
-import { Request, response, Response } from "express";
+import { Request, Response } from "express";
+import { HttpError } from "../utils/http-error.js";
+import { ZodError } from "zod";
 import { loginSchema, registerSchema } from "../schemas/auth.schema.js";
 import * as authService from "../services/auth.service.js";
 
@@ -16,8 +18,23 @@ export async function register(
       user,
     });
   } catch (error) {
-    response.status(400).json({
-      error: error instanceof Error ? error.message : "Unknown error",
+    if (error instanceof HttpError) {
+      response.status(error.statusCode).json({
+        error: error.message,
+      });
+      return;
+    }
+
+    if (error instanceof ZodError) {
+      response.status(400).json({
+        error: "Validation error",
+        details: error.issues.map((issue) => issue.message),
+      });
+      return;
+    }
+
+    response.status(500).json({
+      error: "Internal server error",
     });
   }
 }
@@ -33,8 +50,23 @@ export async function login(
 
     response.status(200).json(result);
   } catch (error) {
-    response.status(400).json({
-      error: error instanceof Error ? error.message : "Unknown error",
+    if (error instanceof HttpError) {
+      response.status(error.statusCode).json({
+        error: error.message,
+      });
+      return;
+    }
+
+    if (error instanceof ZodError) {
+      response.status(400).json({
+        error: "Validation error",
+        details: error.issues.map((issue) => issue.message),
+      });
+      return;
+    }
+
+    response.status(500).json({
+      error: "Internal server error",
     });
   }
 }

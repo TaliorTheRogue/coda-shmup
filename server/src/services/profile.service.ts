@@ -1,4 +1,5 @@
 import { prisma } from "../lib/prisma.js";
+import { HttpError } from "../utils/http-error.js";
 
 export async function getProfile(userId: string) {
   const user = await prisma.user.findUnique({
@@ -22,7 +23,10 @@ export async function getProfile(userId: string) {
   });
 
   if (!user) {
-    throw new Error("User not found");
+    throw new HttpError(
+      404,
+      "User not found"
+    );
   }
 
   return user;

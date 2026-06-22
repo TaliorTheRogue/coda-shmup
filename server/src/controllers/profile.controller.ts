@@ -1,25 +1,31 @@
 import { Request, Response } from "express";
-
 import * as profileService from "../services/profile.service.js";
+import { HttpError } from "../utils/http-error.js";
 
 export async function getProfile(
-  req: Request,
-  res: Response
+  request: Request,
+  response: Response
 ): Promise<void> {
   try {
-    if (!req.user) {
-      res.status(401).json({
+    if (!request.user) {
+      response.status(401).json({
         error: "User is not authenticated",
       });
       return;
     }
 
-    const profile = await profileService.getProfile(req.user.id);
+    const profile = await profileService.getProfile(request.user.id);
 
-    res.status(200).json(profile);
+    response.status(200).json(profile);
   } catch (error) {
-    res.status(400).json({
-      error: error instanceof Error ? error.message : "Unknown error",
+    if (error instanceof HttpError) {
+      response.status(error.statusCode).json({
+        error: error.message,
+      });
+      return;
+    }
+    response.status(500).json({
+      error: "Internal server error",
     });
   }
 }

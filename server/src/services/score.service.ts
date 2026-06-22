@@ -1,5 +1,6 @@
 import { prisma } from "../lib/prisma.js";
 import type { CreateScoreInput } from "../schemas/score.schema.js";
+import { HttpError } from "../utils/http-error.js";
 
 export async function createScore(userId: string, data: CreateScoreInput) {
   const ship = await prisma.ship.findFirst({
@@ -10,7 +11,10 @@ export async function createScore(userId: string, data: CreateScoreInput) {
   });
 
   if (!ship) {
-    throw new Error("Ship not found for this user");
+    throw new HttpError(
+      404,
+      "Ship not found"
+    );
   }
 
   const score = await prisma.score.create({

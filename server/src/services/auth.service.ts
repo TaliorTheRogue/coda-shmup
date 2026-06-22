@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { prisma } from "../lib/prisma.js";
 import jwt from "jsonwebtoken";
+import { HttpError } from "../utils/http-error.js";
 import type { LoginInput, RegisterInput } from "../schemas/auth.schema.js";
 
 export async function register(data: RegisterInput) {
@@ -11,7 +12,10 @@ export async function register(data: RegisterInput) {
   });
 
   if (existingUser) {
-    throw new Error("Username already exists");
+    throw new HttpError(
+      409,
+      "Username already exists"
+    );
   }
 
   const passwordHash = await bcrypt.hash(data.password, 10);
@@ -34,7 +38,13 @@ export async function register(data: RegisterInput) {
     },
   });
 
-  return user;
+  return {
+    id: user.id,
+    username: user.username,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+    ships: user.ships,
+  };
 };
 
 export async function login(data: LoginInput) {
@@ -48,7 +58,10 @@ export async function login(data: LoginInput) {
   });
 
   if (!user) {
-    throw new Error("Invalid credentials");
+    throw new HttpError(
+      401,
+      "Invalid Credentials"
+    );
   }
 
   const isPasswordValid = await bcrypt.compare(
@@ -57,7 +70,10 @@ export async function login(data: LoginInput) {
   );
 
   if (!isPasswordValid) {
-    throw new Error("Invalid credentials");
+    throw new HttpError(
+      401,
+      "Invalid Credentials"
+    );
   }
 
   const jwtSecret = process.env.JWT_SECRET;
