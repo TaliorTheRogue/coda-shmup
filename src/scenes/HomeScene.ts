@@ -52,6 +52,10 @@ export default class HomeScene extends Phaser.Scene {
             this.scene.start(GameConstants.SceneKeys.MAIN_GAME);
         });
 
+        this.input.keyboard?.once("keydown-L", () => {
+            this.scene.start(GameConstants.SceneKeys.AUTH, { mode: "login" });
+        });
+
         console.log("HomeScene created");
     }
 }

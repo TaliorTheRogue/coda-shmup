@@ -5,6 +5,7 @@ import MainGameScene from './scenes/MainGameScene.ts';
 import MainUIScene from "./scenes/MainUIScene.ts";
 import EntityManager from "./managers/EntityManager.ts";
 import SaveManager from "./managers/SaveManager.ts";
+import AuthScene from './scenes/AuthScene.ts';
 
 // Find out more information about the Game Config at:
 // https://docs.phaser.io/api-documentation/typedef/types-core#gameconfig
@@ -32,9 +33,13 @@ const config: Types.Core.GameConfig = {
             {key: EntityManager.PLUGIN_KEY, plugin: EntityManager, mapping: EntityManager.MAPPING_NAME}
         ]
     },
+    dom : {
+        createContainer: true,
+    },
     // fps: { forceSetTimeOut: true, target: 120 },
     scene: [
         HomeScene,
+        AuthScene,
         MainGameScene,
         MainUIScene,
         GameOverScene
