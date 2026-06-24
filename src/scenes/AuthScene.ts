@@ -1,6 +1,9 @@
 import GameConstants from "../GameConstants.ts";
 import { register } from "../api/authApi.ts";
 import { AuthManager } from "../managers/AuthManager.ts";
+import { createScore } from "../api/scoreApi.ts";
+import SaveConstants from "../SaveConstants.ts";
+import SaveManager from "../managers/SaveManager.ts";
 
 type AuthMode = "login" | "register";
 
@@ -13,6 +16,34 @@ export default class AuthScene extends Phaser.Scene {
 
     init(data: { mode?: AuthMode }) {
         this.mode = data.mode ?? "login";
+    }
+
+    private async savePendingScoreIfExists(): Promise<void> {
+      const saveManager = this.plugins.get(SaveManager.PLUGIN_KEY) as SaveManager;
+      const pendingScore = saveManager.getData(SaveConstants.Keys.PLAYER_PENDING_SCORE);
+
+      if (!pendingScore) {
+        return;
+      }
+
+      const user = AuthManager.getInstance().getUser();
+      const ship = user?.ships[0];
+
+      if (!ship) {
+        return;
+      }
+
+      await createScore({
+        shipId: ship.id,
+        value: Number(pendingScore),
+      });
+
+      saveManager.setData(
+        SaveConstants.Keys.PLAYER_PENDING_SCORE,
+        null
+      );
+
+      console.log("Pending score saved online:", pendingScore);
     }
 
     create() {
@@ -77,6 +108,7 @@ export default class AuthScene extends Phaser.Scene {
                 );
 
                 this.scene.start(GameConstants.SceneKeys.HOME);
+                await this.savePendingScoreIfExists();
             } catch (error) {
                 message.setText(error instanceof Error ? error.message : "Authentication failed");
             }
