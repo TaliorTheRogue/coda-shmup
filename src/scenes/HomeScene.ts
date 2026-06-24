@@ -33,6 +33,7 @@ export default class HomeScene extends Phaser.Scene {
 
         this.load.image('title', 'UI/CODA_SHMUP_title.png');
         this.load.image('menuButton', 'UI/bar_round_gloss_large.png');
+        this.load.image('UIPanel', 'UI/button_square_header_small_rectangle.png');
         this.load.image('bg', 'Backgrounds/darkPurple.png');
         this.load.image('planet', 'Planets/planet00.png');
         this.load.atlas('sprites', 'Spritesheet/gameSprites.png', 'Spritesheet/gameSprites.json');
