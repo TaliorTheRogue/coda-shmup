@@ -37,12 +37,6 @@ export default class MainGameScene extends Scene {
         this.entityManager.initEnemies();
         this.entityManager.initGroupCollisions();
 
-        if (this.input.keyboard) {
-            this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R).on('down', () => this.scene.restart());
-        } else {
-            console.error('No keyboard input');
-        }
-
         this.registry.set(RegistryConstants.Keys.PLAYER_SCORE, 0);
     }
 

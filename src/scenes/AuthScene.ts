@@ -153,7 +153,7 @@ export default class AuthScene extends Phaser.Scene {
             </div>
         `);
 
-        const message = this.add.text(centerX, 1250, "", {
+        const message = this.add.text(centerX, form.y + form.height/2 + 30, "", {
             fontSize: "26px",
             color: "#ff6666",
             fontFamily: "future",
