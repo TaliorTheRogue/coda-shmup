@@ -5,7 +5,8 @@ export const createScoreSchema = z.object({
   value: z
     .number()
     .int("Score must be an integer")
-    .min(0, "Score must be positive"),
+    .min(0, "Score must be positive")
+    .max(999999, "Score is too high"),
 });
 
 export type CreateScoreInput = z.infer<typeof createScoreSchema>;
