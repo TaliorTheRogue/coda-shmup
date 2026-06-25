@@ -29,13 +29,11 @@ export default class EntityManager extends Plugins.ScenePlugin {
     constructor(scene: Scene, pluginManager: Plugins.PluginManager) {
         super(scene, pluginManager, EntityManager.PLUGIN_KEY);
 
-        console.log("[EntityManager] Initialized");
     }
 
     destroy() {
         super.destroy();
 
-        console.log("[EntityManager] Destroyed");
     }
 
     public initAndSpawnPlayer(): Player {
@@ -44,8 +42,6 @@ export default class EntityManager extends Plugins.ScenePlugin {
 
         this._player = new Player(this.scene!, this.scene!.cameras.main.centerX, this.scene!.cameras.main.height - 220);
         this._player.init(this._playerBullets);
-
-        console.log("[EntityManager] Player spawned");
 
         this.game!.events.emit(GameConstants.Events.PLAYER_SPAWNED_EVENT, this._player);
 
@@ -72,8 +68,6 @@ export default class EntityManager extends Plugins.ScenePlugin {
             callbackScope: this,
             loop: true
         });
-
-        console.log("[EntityManager] Enemies initialized");
 
         return this._enemies;
     }
@@ -106,8 +100,6 @@ export default class EntityManager extends Plugins.ScenePlugin {
 
             return true;
         });
-
-        console.log("[EntityManager] Group collisions initialized");
     }
 
     private spawnEnemy() {
@@ -123,7 +115,5 @@ export default class EntityManager extends Plugins.ScenePlugin {
         enemy.enable(Phaser.Math.Between(64, this.scene!.cameras.main.width - 64), 0);
 
         this.game!.events.emit(GameConstants.Events.ENEMY_SPAWNED_EVENT, enemy);
-
-        console.log("[EntityManager] Enemy spawned");
     }
 }

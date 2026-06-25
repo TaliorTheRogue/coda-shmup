@@ -38,7 +38,6 @@ export default class GameOverScene extends Phaser.Scene {
                 shipId: ship.id,
                 value: score,
             });
-            console.log("Score saved online:", score);
         } catch (error) {
             console.error("Failed to save score online:", error);
         }
