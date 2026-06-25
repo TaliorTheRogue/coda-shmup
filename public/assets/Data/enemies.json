@@ -1,0 +1,27 @@
+{
+  "1": {
+    "type": "base",
+    "texture": "ufoRed",
+    "shootAnimation": "ufoShoot",
+    "maxHealth": 1,
+    "movementType": "vertical",
+    "movementSpeed": 0.2,
+    "movementAmplitude": 0,
+    "movementFrequency": 0,
+    "projectileCount": 1,
+    "shotAngleZone": 1
+
+  },
+  "2": {
+    "type": "spread",
+    "texture": "ufoRedSpread",
+    "shootAnimation": "ufoSpreadShoot",
+    "maxHealth": 2,
+    "movementType": "sinusoidal",
+    "movementSpeed": 0.1,
+    "movementAmplitude": 80,
+    "movementFrequency": 0.003,
+    "projectileCount": 5,
+    "shotAngleZone": 90
+  }
+}

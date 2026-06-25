@@ -11,16 +11,12 @@ export default class SaveManager extends Plugins.BasePlugin {
         super(pluginManager);
 
         this._dataManager = new Data.DataManager(this.game);
-
-        console.log('[SaveManager] Initialized');
     }
 
     destroy() {
         super.destroy();
 
         this._dataManager.destroy();
-
-        console.log('[SaveManager] Destroyed');
     }
 
     public setData(key: string, value: any, save: boolean = true): void {
@@ -38,7 +34,6 @@ export default class SaveManager extends Plugins.BasePlugin {
         try {
             // cf. https://docs.phaser.io/phaser/concepts/data-manager#using-json
             const json: string = JSON.stringify(this._dataManager.list);
-            console.log('[SaveManager] Saving: ', json);
 
             localStorage.setItem(SaveManager.LOCAL_STORAGE_KEY, json);
         } catch (error) {
@@ -57,7 +52,6 @@ export default class SaveManager extends Plugins.BasePlugin {
 
             this._dataManager.reset().merge(JSON.parse(json));
 
-            console.log('[SaveManager] Loading: ', json);
         } catch (error) {
             console.error('[SaveManager] Load failed: ', error);
         }
@@ -67,6 +61,5 @@ export default class SaveManager extends Plugins.BasePlugin {
         this._dataManager.reset();
         localStorage.removeItem(SaveManager.LOCAL_STORAGE_KEY);
 
-        console.log('[SaveManager] Save cleared');
     }
 }

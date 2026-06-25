@@ -8,7 +8,7 @@ export default class Health extends Phaser.Events.EventEmitter implements ICompo
     public static readonly DEATH_EVENT: string = 'death';
 
     private _current: number;
-    private readonly _max: number;
+    private _max: number;
     private readonly _entity: Entity;
 
     public get current(): number {
@@ -17,6 +17,11 @@ export default class Health extends Phaser.Events.EventEmitter implements ICompo
 
     public get max(): number {
         return this._max;
+    }
+
+    public setMax(max: number) {
+        this._max = max;
+        this._current = Phaser.Math.Clamp(this._current, 0, this._max);
     }
 
     public constructor(value: number, entity: Entity) {
@@ -50,7 +55,7 @@ export default class Health extends Phaser.Events.EventEmitter implements ICompo
             if (this._current <= 0 && prev > 0) {
                 const scene = this._entity.scene;
                 const explosion = scene.add.image(this._entity.x, this._entity.y, "sprites",
-                    "star1.png");
+                    "star1");
 
                 scene.tweens.add({
                     targets: explosion,
