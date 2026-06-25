@@ -7,6 +7,7 @@ import EntityManager from "./managers/EntityManager.ts";
 import SaveManager from "./managers/SaveManager.ts";
 import AuthScene from './scenes/AuthScene.ts';
 import LeaderboardScene from './scenes/LeaderboardScene.ts';
+import "./styles/auth-style.css";
 
 // Find out more information about the Game Config at:
 // https://docs.phaser.io/api-documentation/typedef/types-core#gameconfig

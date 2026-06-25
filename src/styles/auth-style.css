@@ -1,0 +1,90 @@
+@font-face {
+    font-family: "future";
+    src: url("/assets/Fonts/kenvector_future.ttf") format("truetype");
+}
+
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  width: 720px;
+  padding: 44px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 10px solid #167DA8;
+  border-radius: 50px;
+}
+
+.auth-input {
+  font-size: 36px;
+  padding: 32px;
+  border-radius: 100px;
+  background: #101827;
+  color: white;
+  border: 2px solid #167DA8;
+  transition: border-color .2s ease;
+}
+
+.auth-input::placeholder {
+  color: #8c8c8c;
+  font-family: "future";
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: white;
+}
+
+.auth-button {
+  font-size: 36px;
+  padding: 28px;
+  border-radius: 100px;
+  cursor: pointer;
+  color: white;
+  background: #1C9FD7;
+  border: none;
+  transition: background .2s ease;
+  font-family: "future";
+}
+
+.auth-button:hover {
+  background: #36BDF7;
+}
+
+.auth-switch-button {
+  font-size: 28px;
+  padding: 28px;
+  border-radius: 100px;
+  cursor: pointer;
+  color: white;
+  background: #1f4f78;
+  border: none;
+  transition: background .2s ease;
+  font-family: "future";
+}
+
+.auth-switch-button:hover {
+  background: #2c6ca0;
+}
+
+.auth-checkbox {
+  font-size: 28px;
+  color: white;
+  font-family: "future";
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.auth-checkbox input[type="checkbox"] {
+  transform: scale(3);
+  cursor: pointer;
+}
+
+.auth-help {
+  margin: 0;
+  color: #cccccc;
+  font-size: 24px;
+  line-height: 1.5;
+  font-family: "future";
+}
