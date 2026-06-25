@@ -106,8 +106,15 @@ export default class HomeScene extends Phaser.Scene {
         this.scene.restart();
     }
 
-    create() {
+    async create() {
         const authManager = AuthManager.getInstance();
+        if (authManager.isAuthenticated() && !authManager.getUser()) {
+            try {
+                await authManager.loadProfile();
+            } catch {
+                authManager.logout();
+            }
+        }
         const user = authManager.getUser();
         const centerX = this.scale.width / 2;
 
