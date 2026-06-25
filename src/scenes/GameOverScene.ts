@@ -45,8 +45,7 @@ export default class GameOverScene extends Phaser.Scene {
     }
     
     private createMenuButton(x: number, y: number, label: string, action: () => void): void {
-        const button = this.add.image(x, y, 'menuButton');
-        button.setScale(3);
+        const button = this.add.image(x, y, 'menuButton').setScale(3);
 
         const buttonText = this.add.text(x, y, label,
             {
