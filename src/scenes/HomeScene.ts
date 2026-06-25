@@ -16,14 +16,12 @@ export default class HomeScene extends Phaser.Scene {
         progressBox.fillStyle(0x222222, 0.8);
         progressBox.fillRect(0, y, width, 64);
         this.load.on(Loader.Events.PROGRESS, function (value: number) { // 0-1
-            console.log("Loading : " + value);
 
             progressBar.clear();
             progressBar.fillStyle(0xffffff, 1);
             progressBar.fillRect(0, y, width * value, 64);
         });
         this.load.on(Loader.Events.COMPLETE, function () {
-            console.log("Loading complete");
 
             progressBar.destroy();
             progressBox.destroy();
@@ -106,8 +104,15 @@ export default class HomeScene extends Phaser.Scene {
         this.scene.restart();
     }
 
-    create() {
+    async create() {
         const authManager = AuthManager.getInstance();
+        if (authManager.isAuthenticated() && !authManager.getUser()) {
+            try {
+                await authManager.loadProfile();
+            } catch {
+                authManager.logout();
+            }
+        }
         const user = authManager.getUser();
         const centerX = this.scale.width / 2;
 
@@ -126,7 +131,6 @@ export default class HomeScene extends Phaser.Scene {
             ? [
                 { label: "PLAY", action: () => this.startGame() },
                 { label: "LEADERBOARD", action: () => this.scene.start(GameConstants.SceneKeys.LEADERBOARD) },
-                { label: "MY HANGAR", action: () => console.log("Hangar not implemented yet") },
                 { label: "LOGOUT", action: () => this.logout() },
             ]
             : [
