@@ -50,3 +50,4 @@ jobs:
           ITCH_GAME: ${{ github.event.repository.name }}
           ITCH_USER: TaliorTheRogue
           PACKAGE: dist/
+          VITE_API_URL: https://coda-shmup-api.onrender.com
