@@ -24,6 +24,8 @@ jobs:
 
       - name: Run build
         run: npm run build
+        env: 
+          VITE_API_URL: https://coda-shmup-api.onrender.com
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4.6.1
@@ -50,4 +52,3 @@ jobs:
           ITCH_GAME: ${{ github.event.repository.name }}
           ITCH_USER: TaliorTheRogue
           PACKAGE: dist/
-          VITE_API_URL: https://coda-shmup-api.onrender.com
