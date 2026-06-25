@@ -22,6 +22,9 @@ const offensiveWords = [
   "nazi",
   "neo-nazi",
   "neonazi",
+  "88",
+  "1488",
+  "heilhitler",
   "kkk",
   "kukluxklan",
   "whitepower",
@@ -34,6 +37,15 @@ const offensiveWords = [
   "supremacy",
   "nigger",
   "nigga",
+  "negre",
+  "negro",
+  "fag",
+  "faggot",
+  "pd",
+  "pederaste",
+  "tarlouze",
+  "pedale",
+  "retard",
 ];
 
 const banwords = [
