@@ -9,7 +9,22 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = (process.env.CORS_ORIGIN ?? "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // autorise les requêtes sans origine (ex: Postman, health checks)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+}));
+
 app.use(express.json());
 
 app.get("/health", (_req, res) => {
